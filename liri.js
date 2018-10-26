@@ -10,6 +10,8 @@ var Spotify = require("node-spotify-api");
 
 var spotify = new Spotify(keys.spotify);
 
+var fs = require("fs");
+
 // console.log(spotify);
 
 // var spotify = new Spotify(keys.spotify);
@@ -82,9 +84,18 @@ switch (serviceName) {
 
     //////////////////////////////////////////////////////////////////////////
     case "do-what-it-says":
+
+    fs.readFile("random.txt", "utf8", function(error, data) {
+        if (error) {
+            return console.log(error);
+          };
+          console.log(data);
+          var dataArr = data.split(",")
+          console.log(dataArr);
+    });
         console.log("do-what-it-says")
         break;
-}
+};
 
 // var nodeArgs = process.argv;
 
