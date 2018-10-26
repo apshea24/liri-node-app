@@ -10,7 +10,7 @@ var Spotify = require("node-spotify-api");
 
 var spotify = new Spotify(keys.spotify);
 
-console.log(spotify);
+// console.log(spotify);
 
 // var spotify = new Spotify(keys.spotify);
 
@@ -40,14 +40,21 @@ switch (serviceName) {
     ///////////////////////////////////////////////////////////////////////////////////////////
     case "spotify-this-song":
         var song = process.argv[3];
-        spotify.search({type: "track", query: song, limit: 3}, function(err, data) {
+        spotify.search({type: "track", query: song, limit: 1}, function(err, data) {
             if (err) {
                 return console.log("Error Occured: " + err)
             };
 
             ///////////Need to do a for loop through the items array and retrieve artists[0].name for all items
             var artists = data.tracks.items[0].artists[0].name;
-            console.log(data.tracks.items);
+            var songName = data.tracks.items[0].name;
+            var preview = data.tracks.items[0].href;
+            var album = data.tracks.items[0].album.name;
+
+            console.log("The Song Name Is: " + songName);
+            console.log("Written and Performed by: " + artists);
+            console.log("Album Name: " + album);
+            console.log("A Link to the Song on Spotify: " + preview);
         });
         console.log("spotify-this-song")
         break;
