@@ -4,7 +4,13 @@ var request = require("request");
 
 var moment = require("moment");
 
-var spotifyRequest = require("./keys.js")
+var keys = require("./keys.js");
+
+var Spotify = require("node-spotify-api");
+
+var spotify = new Spotify(keys.spotify);
+
+console.log(spotify);
 
 // var spotify = new Spotify(keys.spotify);
 
@@ -33,6 +39,16 @@ switch (serviceName) {
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     case "spotify-this-song":
+        var song = process.argv[3];
+        spotify.search({type: "track", query: song, limit: 3}, function(err, data) {
+            if (err) {
+                return console.log("Error Occured: " + err)
+            };
+
+            ///////////Need to do a for loop through the items array and retrieve artists[0].name for all items
+            var artists = data.tracks.items[0].artists[0].name;
+            console.log(data.tracks.items);
+        });
         console.log("spotify-this-song")
         break;
 
