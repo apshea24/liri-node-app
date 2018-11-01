@@ -12,11 +12,7 @@ var spotify = new Spotify(keys.spotify);
 
 var fs = require("fs");
 
-// console.log(spotify);
 
-// var spotify = new Spotify(keys.spotify);
-
-// console.log(spotify);
 var serviceName = process.argv[2];
 var searchItem = process.argv.slice(3).join("+");
 switchStatement(serviceName, searchItem);
@@ -26,16 +22,13 @@ function switchStatement(serviceName, searchItem) {
     switch (serviceName) {
         case "concert-this":
             console.log("concert-this")
-            // var searchItem = process.argv.slice(3).join("+");
-            console.log(searchItem);
-            // var artist = process.argv[3];
             var bandsURL = "https://rest.bandsintown.com/artists/" + searchItem + "/events?app_id=codingbootcamp";
             // var eventsArr = "";
             request(bandsURL, function (error, response, body) {
                 if (!error && response.statusCode === 200) {
-                    console.log(JSON.parse(body));
                     var eventArr = JSON.parse(body)
                     for (var i = 0; i < eventArr.length; i++) {
+                        console.log("-------------------------------------------------------------")
                         console.log("Venue: " + eventArr[i].venue.name);
                         console.log("Location: " + eventArr[i].venue.city + ", " + eventArr[i].venue.region);
                         console.log("Datetime: " + moment("'" + eventArr[i].datetime + "'", moment.HTML5_FMT.DATETIME_LOCAL).format("L"));
@@ -47,13 +40,10 @@ function switchStatement(serviceName, searchItem) {
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         case "spotify-this-song":
-            // var song = process.argv[3];
             spotify.search({ type: "track", query: searchItem, limit: 1 }, function (err, data) {
                 if (err) {
                     return console.log("Error Occured: " + err)
                 };
-
-                ///////////Need to do a for loop through the items array and retrieve artists[0].name for all items
                 var artists = data.tracks.items[0].artists[0].name;
                 var songName = data.tracks.items[0].name;
                 var preview = data.tracks.items[0].href;
@@ -64,16 +54,13 @@ function switchStatement(serviceName, searchItem) {
                 console.log("Album Name: " + album);
                 console.log("A Link to the Song on Spotify: " + preview);
             });
-            console.log("spotify-this-song")
             break;
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         case "movie-this":
-            // var movie = process.argv[3];
             var movieURL = "http://www.omdbapi.com/?t=" + searchItem + "&y=&plot=short&apikey=trilogy";
             request(movieURL, function (error, response, body) {
                 if (!error && response.statusCode === 200) {
-                    // console.log(JSON.parse(body));
                     var movieObj = JSON.parse(body);
                     console.log("Title: " + movieObj.Title);
                     console.log("Year Released: " + movieObj.Year);
@@ -94,7 +81,6 @@ function switchStatement(serviceName, searchItem) {
                 if (error) {
                     return console.log(error);
                 };
-                // console.log(data);
                 var dataArr = data.split(",")
                 var search = dataArr[0];
                 var item = dataArr[1]
@@ -103,7 +89,6 @@ function switchStatement(serviceName, searchItem) {
 
                 switchStatement(search, newItem);
             });
-            console.log("do-what-it-says")
             break;
     };
 
