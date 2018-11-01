@@ -18,14 +18,18 @@ var fs = require("fs");
 
 // console.log(spotify);
 var serviceName = process.argv[2];
+var searchItem = process.argv.slice(3).join("+");
+switchStatement(serviceName, searchItem);
 
-function switchStatement() {
+function switchStatement(serviceName, searchItem) {
 
     switch (serviceName) {
         case "concert-this":
             console.log("concert-this")
-            var artist = process.argv[3];
-            var bandsURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
+            // var searchItem = process.argv.slice(3).join("+");
+            console.log(searchItem);
+            // var artist = process.argv[3];
+            var bandsURL = "https://rest.bandsintown.com/artists/" + searchItem + "/events?app_id=codingbootcamp";
             // var eventsArr = "";
             request(bandsURL, function (error, response, body) {
                 if (!error && response.statusCode === 200) {
@@ -43,8 +47,8 @@ function switchStatement() {
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         case "spotify-this-song":
-            var song = process.argv[3];
-            spotify.search({ type: "track", query: song, limit: 1 }, function (err, data) {
+            // var song = process.argv[3];
+            spotify.search({ type: "track", query: searchItem, limit: 1 }, function (err, data) {
                 if (err) {
                     return console.log("Error Occured: " + err)
                 };
@@ -65,8 +69,8 @@ function switchStatement() {
 
         /////////////////////////////////////////////////////////////////////////////////////////////
         case "movie-this":
-            var movie = process.argv[3];
-            var movieURL = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
+            // var movie = process.argv[3];
+            var movieURL = "http://www.omdbapi.com/?t=" + searchItem + "&y=&plot=short&apikey=trilogy";
             request(movieURL, function (error, response, body) {
                 if (!error && response.statusCode === 200) {
                     // console.log(JSON.parse(body));
@@ -81,7 +85,6 @@ function switchStatement() {
                     console.log("Actors/Actresses: " + movieObj.Actors);
                 };
             });
-            console.log(movie);
             break;
 
         //////////////////////////////////////////////////////////////////////////
@@ -91,12 +94,14 @@ function switchStatement() {
                 if (error) {
                     return console.log(error);
                 };
-                console.log(data);
+                // console.log(data);
                 var dataArr = data.split(",")
-                console.log(dataArr);
-                //Recursive Function (Must research)
-                //   process.arg[2] = dataArr[0];
-                //   if (dataArr[0] === "spotify-this-song")
+                var search = dataArr[0];
+                var item = dataArr[1]
+                var newItem = item.split(" ").join("+");
+                console.log(search);
+
+                switchStatement(search, newItem);
             });
             console.log("do-what-it-says")
             break;
